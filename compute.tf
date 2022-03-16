@@ -110,12 +110,12 @@ resource "aws_route_table_association" "public_assoc" {
   route_table_id = aws_route_table.public_rt.id
 }
 
-resource "null_resource" "docker_install" {
-  depends_on = [aws_instance.web]
-  provisioner "local-exec" {
-    command = "ansible-playbook -i aws_hosts --key-file /home/ubuntu/.ssh/wpkey playbooks/docker.yml"
-  }
-}
+# resource "null_resource" "docker_install" {
+#   depends_on = [aws_instance.web]
+#   provisioner "local-exec" {
+#     command = "ansible-playbook -i aws_hosts --key-file /home/ubuntu/.ssh/wpkey playbooks/docker.yml"
+#   }
+# }
 
 output "docker_access" {
   value = { for i in aws_instance.web[*] : i.tags.Name => "${i.public_ip}" }
