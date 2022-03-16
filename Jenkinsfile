@@ -23,7 +23,7 @@ pipeline {
     }
     stage('Destroy') {
       steps {
-        sh 'terraform plan -auto-approve -no-color'
+        sh 'terraform destroy -auto-approve -no-color'
       }
     }
   }
