@@ -29,7 +29,7 @@ pipeline {
     }
     stage('Ansible') {
      steps {
-      ansiblePlaybook(credentiasId: 'wpkey', inventory: 'aws_hosts', playbook: 'playbooks/docker.yml')
+      ansiblePlaybook(credentialsId: 'wpkey', inventory: 'aws_hosts', playbook: 'playbooks/docker.yml')
      }
     }
     stage('Destroy') {
