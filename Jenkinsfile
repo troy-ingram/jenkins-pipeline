@@ -3,7 +3,7 @@ pipeline {
   environment {
     TF_IN_AUTOMATION = 'true'
     TF_CLI_CONFIG_FILE = credentials('tf-docker-creds')
-    AWS_SHARED_CREDENTIALS_FILE='/home/ubuntu/.aws/credentials
+    AWS_SHARED_CREDENTIALS_FILE='/home/ubuntu/.aws/credentials'
   }
   stages {
     stage('Init') {
