@@ -1,9 +1,10 @@
 variable "vpc_cidr" {
-  type    = string
+  type = string
 }
 
 variable "public_cidr" {
-  type = string
+  type = list(string)
+  default = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24", "10.1.4.0/24", "10.1.5.0/24", "10.1.6.0/24"]
 }
 
 variable "key_name" {
@@ -25,6 +26,6 @@ variable "cloud9_ip" {
 }
 
 variable "instance_count" {
-  type = number
+  type    = number
   default = 1
 }

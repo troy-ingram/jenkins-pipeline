@@ -1,3 +1,9 @@
+locals {
+  azs = data.aws_availability_zones.available.names
+}
+
+data "aws_availability_zones" "available" {}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -15,11 +21,11 @@ resource "aws_key_pair" "docker_auth" {
 }
 
 resource "aws_instance" "web" {
-  count = var.instance_count
+  count                  = var.instance_count
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.sg.id]
-  subnet_id              = aws_subnet.public_subnet.id
+  subnet_id              = aws_subnet.public_subnet[count.index].id
   key_name               = aws_key_pair.docker_auth.id
 
   tags = {
@@ -58,10 +64,12 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "public_subnet" {
+  count                   = length(local.azs)
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.public_cidr
+  cidr_block              = var.public_cidr[count.index]
   map_public_ip_on_launch = true
-  availability_zone       = "us-east-1a"
+  availability_zone       = local.azs[count.index]
+
 
   tags = {
     Name = "docker-public"
@@ -107,7 +115,8 @@ resource "aws_route" "default_route" {
 }
 
 resource "aws_route_table_association" "public_assoc" {
-  subnet_id      = aws_subnet.public_subnet.id
+  count          = length(local.azs)
+  subnet_id      = aws_subnet.public_subnet.*.id[count.index]
   route_table_id = aws_route_table.public_rt.id
 }
 
@@ -123,9 +132,9 @@ output "docker_access" {
 }
 
 output "instance_ips" {
-  value = [for i in aws_instance.web[*]: i.public_ip]
+  value = [for i in aws_instance.web[*] : i.public_ip]
 }
 
 output "instance_ids" {
-  value = [for i in aws_instance.web[*]: i.id]
+  value = [for i in aws_instance.web[*] : i.id]
 }
