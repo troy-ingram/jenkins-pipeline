@@ -29,7 +29,7 @@ resource "aws_instance" "web" {
   key_name               = aws_key_pair.docker_auth.id
 
   tags = {
-    Name = "docker-instance"
+    Name = "docker-instance-${count.index + 1}"
   }
 
   # provisioner "local-exec" {
@@ -72,7 +72,7 @@ resource "aws_subnet" "public_subnet" {
 
 
   tags = {
-    Name = "docker-public"
+    Name = "docker-public-${count.index + 1}"
   }
 }
 
