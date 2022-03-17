@@ -15,6 +15,7 @@ resource "aws_key_pair" "docker_auth" {
 }
 
 resource "aws_instance" "web" {
+  count = var.instance_count
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.sg.id]
@@ -25,14 +26,14 @@ resource "aws_instance" "web" {
     Name = "docker-instance"
   }
 
-  provisioner "local-exec" {
-    command = "printf '\n${self.public_ip}' >> aws_hosts" # &&  aws ec2 wait instance-status-ok --instance-ids ${self.id} --region us-east-1
-  }
+  # provisioner "local-exec" {
+  #   command = "printf '\n${self.public_ip}' >> aws_hosts" # &&  aws ec2 wait instance-status-ok --instance-ids ${self.id} --region us-east-1
+  # }
 
-  provisioner "local-exec" {
-    when    = destroy
-    command = "sed -i '/^[0-9]/d' aws_hosts"
-  }
+  # provisioner "local-exec" {
+  #   when    = destroy
+  #   command = "sed -i '/^[0-9]/d' aws_hosts"
+  # }
 }
 
 resource "aws_vpc" "vpc" {
@@ -119,4 +120,8 @@ resource "aws_route_table_association" "public_assoc" {
 
 output "docker_access" {
   value = { for i in aws_instance.web[*] : i.tags.Name => "${i.public_ip}" }
+}
+
+output "instance_ips" {
+  value = [for in aws_instance.web[*]: i.public_ip]
 }

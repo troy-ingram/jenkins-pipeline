@@ -23,3 +23,8 @@ variable "cloud9_ip" {
   type    = string
   default = "18.207.183.145/32"
 }
+
+variable "instance_count" {
+  type = number
+  default = 1
+}
