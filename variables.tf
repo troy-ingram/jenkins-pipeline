@@ -4,8 +4,8 @@ variable "vpc_cidr" {
 }
 
 variable "public_cidr" {
-  type = list(string)
-  default = ["10.1.1.0/24"]
+  type = string
+  default = "10.1.1.0/24"
 }
 
 variable "key_name" {
