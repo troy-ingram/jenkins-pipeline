@@ -123,5 +123,5 @@ output "docker_access" {
 }
 
 output "instance_ips" {
-  value = [for in aws_instance.web[*]: i.public_ip]
+  value = [for i in aws_instance.web[*]: i.public_ip]
 }
